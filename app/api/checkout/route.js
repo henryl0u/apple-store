@@ -16,16 +16,6 @@ export async function POST(request) {
     const city = formData.get("city");
     const postalCode = formData.get("postalCode");
 
-    console.log("Received form data:", {
-      fullName,
-      email,
-      phone,
-      address,
-      city,
-      postalCode,
-      productIds,
-    });
-
     const uniqueIDs = [...new Set(productIds)];
     const products = await Product.find({ _id: { $in: uniqueIDs } }).exec();
 

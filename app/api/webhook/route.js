@@ -12,14 +12,8 @@ export async function POST(request) {
   let event;
   try {
     const payload = await buffer(request);
-    const signature = request.headers.get("stripe-signature");
-
-    // Log raw body and signature for debugging
-    console.log("Raw body:", payload.toString());
-    console.log("Signature:", signature);
-
+    const signature = request.headers.get('stripe-signature');
     event = stripe.webhooks.constructEvent(payload, signature, signingSecret);
-    console.log('Constructed event:', event);
   } catch (err) {
     console.error(`Webhook signature verification failed: ${err.message}`);
     return NextResponse.json(
