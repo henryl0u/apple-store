@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { initMongoose } from "@/lib/mongoose";
 import Order from "@/models/Order";
-import { buffer } from "micro";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 
 export async function POST(request) {
   await initMongoose();
@@ -11,11 +11,9 @@ export async function POST(request) {
 
   let event;
   try {
-    const payload = await buffer(request);
+    const body = await request.arrayBuffer();
+    const payload = Buffer.from(body);
     const signature = request.headers.get("stripe-signature");
-
-    console.log("Stripe signature:", signature);
-    console.log("Request body:", buf.toString());
 
     event = stripe.webhooks.constructEvent(payload, signature, signingSecret);
 
